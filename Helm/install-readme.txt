@@ -42,3 +42,39 @@ kubectl get pvc storage-loki-stack-alertmanager-0 -n dev
 
 +++++++++++++++++++++++++++++++++++++++++++
 
+nano loki-stack-vakues.yaml
+
+prometheus:
+  enabled: true
+  server:
+    persistentVolume:
+      enabled: true
+      existingClaim: prometheus-pvc
+
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          enabled: false
+        existingClaim: alertmanager-pvc
+
+loki:
+  enabled: true
+  persistence:
+    enabled: true
+    existingClaim: loki-pvc
+
+promtail:
+  enabled: true
+
+grafana:
+  enabled: true
+  adminPassword: "admin"
+  persistence:
+    enabled: false
+
+  grafana.ini:
+    server:
+      root_url: "%(protocol)s://%(domain)s/mon/"
+      serve_from_sub_path: true
